@@ -10,23 +10,9 @@
 		6A0000000000000000000001 /* Ghostpad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ghostpad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		6A0000000000000000000010 /* Exceptions for "Ghostpad" folder in "Ghostpad" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Resources/AppIcon.png,
-				Resources/Image1.png,
-			);
-			target = 6A0000000000000000000006 /* Ghostpad */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6A0000000000000000000002 /* Ghostpad */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				6A0000000000000000000010 /* Exceptions for "Ghostpad" folder in "Ghostpad" target */,
-			);
 			path = Ghostpad;
 			sourceTree = "<group>";
 		};

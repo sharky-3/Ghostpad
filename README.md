@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="Ghostpad/Resources/AppIcon.png" alt="Ghostpad" width="100">
+<img src="Readme/AppIcon.png" alt="Ghostpad" width="100">
 
 # Ghostpad
 
@@ -10,7 +10,7 @@ A lightweight macOS menu bar app that turns your MacBook trackpad into an invisi
 
 <br>
 
-<img src="Ghostpad/Resources/Image1.png" alt="Ghostpad running on macOS" width="100%">
+<img src="Readme/Image1.png" alt="Ghostpad running on macOS" width="100%">
 
 <br>
 
