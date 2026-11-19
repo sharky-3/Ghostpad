@@ -15,6 +15,10 @@ final class HUDPanel: NSPanel {
         animationBehavior = .none
     }
 
+    override func constrainFrameRect(_ frameRect: NSRect, to screen: NSScreen?) -> NSRect {
+        frameRect
+    }
+
     override var canBecomeKey: Bool {
         false
     }

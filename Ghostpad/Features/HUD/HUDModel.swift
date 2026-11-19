@@ -4,15 +4,16 @@ import SwiftUI
 final class HUDModel {
     var layout = KeypadLayout.standard
     var aspectRatio = TrackpadGeometry.fallback.aspectRatio
-    var anchor = HUDAnchor.topRight
-    var width: CGFloat = 340
+    var anchor = HUDAnchor.bottomCenter
+    var width: CGFloat = 360
     var opacity: Double = 1
     var isPresented = false
+    var hiddenOffset = CGSize.zero
     var touches: [TouchPoint] = []
-    var pressedKeyID: String?
+    var pressedKeyID: UUID?
 
-    let padding: CGFloat = 10
-    let cornerRadius: CGFloat = 20
+    let padding: CGFloat = 12
+    let cornerRadius: CGFloat = 24
 
     var cardSize: CGSize {
         let gridWidth = width - padding * 2

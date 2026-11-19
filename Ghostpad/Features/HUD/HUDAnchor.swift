@@ -12,7 +12,18 @@ enum HUDAnchor: String, CaseIterable, Identifiable {
         rawValue
     }
 
-    private var horizontal: Int {
+    var title: String {
+        switch self {
+        case .topLeft: "Top Left"
+        case .topCenter: "Top Center"
+        case .topRight: "Top Right"
+        case .bottomLeft: "Bottom Left"
+        case .bottomCenter: "Bottom Center"
+        case .bottomRight: "Bottom Right"
+        }
+    }
+
+    var horizontal: Int {
         switch self {
         case .topLeft, .bottomLeft: -1
         case .topCenter, .bottomCenter: 0
@@ -20,17 +31,17 @@ enum HUDAnchor: String, CaseIterable, Identifiable {
         }
     }
 
-    private var isTop: Bool {
+    var isTop: Bool {
         self == .topLeft || self == .topCenter || self == .topRight
     }
 
-    var unitPoint: UnitPoint {
-        UnitPoint(x: Double(horizontal + 1) / 2, y: isTop ? 0 : 1)
-    }
-
-    var slideOffset: CGSize {
-        let distance: CGFloat = 14
-        return CGSize(width: CGFloat(horizontal) * distance, height: isTop ? -distance : distance)
+    var slideEdge: Edge {
+        switch self {
+        case .topCenter: .top
+        case .bottomCenter: .bottom
+        case .topLeft, .bottomLeft: .leading
+        case .topRight, .bottomRight: .trailing
+        }
     }
 
     func origin(for size: CGSize, in frame: CGRect, inset: CGFloat) -> CGPoint {

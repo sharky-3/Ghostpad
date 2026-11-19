@@ -2,27 +2,26 @@ import AppKit
 
 final class MenuBarController: NSObject {
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-    private let toggleItem = NSMenuItem(title: "Show Keypad", action: #selector(toggle), keyEquivalent: "")
-    private let onToggle: () -> Void
+    private let onSettings: () -> Void
 
-    init(onToggle: @escaping () -> Void) {
-        self.onToggle = onToggle
+    init(onSettings: @escaping () -> Void) {
+        self.onSettings = onSettings
         super.init()
         statusItem.button?.image = GhostGlyph.image(filled: false)
-        toggleItem.target = self
         let menu = NSMenu()
-        menu.addItem(toggleItem)
+        let settings = NSMenuItem(title: "Settings…", action: #selector(openSettings), keyEquivalent: ",")
+        settings.target = self
+        menu.addItem(settings)
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Quit Ghostpad", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        menu.addItem(NSMenuItem(title: "Quit Ghostpad", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         statusItem.menu = menu
     }
 
     func setActive(_ active: Bool) {
         statusItem.button?.image = GhostGlyph.image(filled: active)
-        toggleItem.title = active ? "Hide Keypad" : "Show Keypad"
     }
 
-    @objc private func toggle() {
-        onToggle()
+    @objc private func openSettings() {
+        onSettings()
     }
 }

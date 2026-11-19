@@ -4,22 +4,30 @@ import SwiftUI
 final class HUDController {
     let model = HUDModel()
 
-    private let margin: CGFloat = 48
-    private let screenInset: CGFloat = 12
+    private let margin: CGFloat = 56
+    private let screenInset: CGFloat = 14
     private var panel: HUDPanel?
     private var visibilityToken = 0
     private var pressToken = 0
 
-    func show(layout: KeypadLayout, aspectRatio: Double) {
+    func show(layout: KeypadLayout, anchor: HUDAnchor, width: Double, opacity: Double, aspectRatio: Double) {
+        let wasPresented = model.isPresented
+        if !wasPresented {
+            model.anchor = anchor
+            model.width = width
+        }
+        model.opacity = opacity
         model.layout = layout
         model.aspectRatio = aspectRatio
         model.touches = []
         model.pressedKeyID = nil
-        let panel = preparePanel()
+        let panel = preparePanel(moving: !wasPresented)
         visibilityToken += 1
         panel.orderFrontRegardless()
-        withAnimation(.spring(duration: 0.38, bounce: 0)) {
-            model.isPresented = true
+        DispatchQueue.main.async { [weak self] in
+            withAnimation(.spring(duration: 0.5, bounce: 0)) {
+                self?.model.isPresented = true
+            }
         }
     }
 
@@ -27,7 +35,7 @@ final class HUDController {
         visibilityToken += 1
         let token = visibilityToken
         model.touches = []
-        withAnimation(.smooth(duration: 0.24)) {
+        withAnimation(.spring(duration: 0.38, bounce: 0)) {
             model.isPresented = false
         } completion: { [weak self] in
             guard let self, self.visibilityToken == token else { return }
@@ -50,23 +58,35 @@ final class HUDController {
         }
     }
 
-    private func preparePanel() -> HUDPanel {
+    private func preparePanel(moving: Bool) -> HUDPanel {
+        let panel = self.panel ?? makePanel()
+        guard moving, let screen = NSScreen.screens.first(where: { NSMouseInRect(NSEvent.mouseLocation, $0.frame, false) }) ?? NSScreen.main else { return panel }
         let card = model.cardSize
-        let screen = NSScreen.screens.first { NSMouseInRect(NSEvent.mouseLocation, $0.frame, false) } ?? NSScreen.main
-        let visible = screen?.visibleFrame ?? .zero
-        let origin = model.anchor.origin(for: card, in: visible, inset: screenInset)
-        let frame = CGRect(origin: origin, size: card).insetBy(dx: -margin, dy: -margin)
-        if let panel {
-            panel.setFrame(frame, display: false)
-            return panel
+        let origin = model.anchor.origin(for: card, in: screen.visibleFrame, inset: screenInset)
+        let cardFrame = CGRect(origin: origin, size: card)
+        let offset = hiddenOffset(for: cardFrame, on: screen.frame)
+        model.hiddenOffset = offset
+        let visibleFrame = cardFrame.insetBy(dx: -margin, dy: -margin)
+        let hiddenFrame = visibleFrame.offsetBy(dx: offset.width, dy: -offset.height)
+        panel.setFrame(visibleFrame.union(hiddenFrame), display: true)
+        return panel
+    }
+
+    private func hiddenOffset(for card: CGRect, on screen: CGRect) -> CGSize {
+        let clearance: CGFloat = 40
+        switch model.anchor.slideEdge {
+        case .top: return CGSize(width: 0, height: -(screen.maxY - card.minY + clearance))
+        case .bottom: return CGSize(width: 0, height: card.maxY - screen.minY + clearance)
+        case .leading: return CGSize(width: -(card.maxX - screen.minX + clearance), height: 0)
+        case .trailing: return CGSize(width: screen.maxX - card.minX + clearance, height: 0)
         }
+    }
+
+    private func makePanel() -> HUDPanel {
         let panel = HUDPanel()
         let host = NSHostingView(rootView: HUDView(model: model, margin: margin))
         host.sizingOptions = []
         panel.contentView = host
-        panel.setFrame(frame, display: false)
-        host.layoutSubtreeIfNeeded()
-        panel.displayIfNeeded()
         self.panel = panel
         return panel
     }
