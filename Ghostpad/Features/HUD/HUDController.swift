@@ -84,9 +84,13 @@ final class HUDController {
 
     private func makePanel() -> HUDPanel {
         let panel = HUDPanel()
+        let container = NSView()
         let host = NSHostingView(rootView: HUDView(model: model, margin: margin))
         host.sizingOptions = []
-        panel.contentView = host
+        host.autoresizingMask = [.width, .height]
+        host.frame = container.bounds
+        container.addSubview(host)
+        panel.contentView = container
         self.panel = panel
         return panel
     }

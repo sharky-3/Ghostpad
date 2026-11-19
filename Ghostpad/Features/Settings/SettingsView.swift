@@ -46,7 +46,6 @@ struct SettingsView: View {
             detail
                 .navigationTitle((pane ?? .general).title)
         }
-        .frame(minWidth: 740, minHeight: 600)
     }
 
     @ViewBuilder

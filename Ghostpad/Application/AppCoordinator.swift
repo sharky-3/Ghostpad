@@ -111,7 +111,7 @@ final class AppCoordinator {
     }
 
     private func press(at point: CGPoint) {
-        guard let key = settings.layout.key(at: point) else { return }
+        guard let key = hud.model.layout.key(at: point) else { return }
         hud.flash(key)
         KeySender.send(key.action)
         restartInactivityTimer()

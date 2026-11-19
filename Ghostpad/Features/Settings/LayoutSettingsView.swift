@@ -174,7 +174,7 @@ struct LayoutEditorGrid: View {
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size
-            let cell = CGSize(width: (size.width - spacing * CGFloat(layout.columns - 1)) / CGFloat(layout.columns), height: (size.height - spacing * CGFloat(layout.rows - 1)) / CGFloat(layout.rows))
+            let cell = CGSize(width: max((size.width - spacing * CGFloat(layout.columns - 1)) / CGFloat(layout.columns), 1), height: max((size.height - spacing * CGFloat(layout.rows - 1)) / CGFloat(layout.rows), 1))
             ZStack(alignment: .topLeading) {
                 if isEditable {
                     ForEach(emptyCells, id: \.self) { item in
@@ -188,7 +188,7 @@ struct LayoutEditorGrid: View {
                     }
                 }
                 ForEach(layout.keys) { key in
-                    KeycapView(key: key, state: .idle, fontSize: min(cell.height * 0.4, cell.width * 0.4, 22), cornerRadius: cornerRadius)
+                    KeycapView(key: key, state: .idle, fontSize: max(min(cell.height * 0.4, cell.width * 0.4, 22), 1), cornerRadius: cornerRadius)
                         .overlay {
                             if selection == .key(key.id) {
                                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)

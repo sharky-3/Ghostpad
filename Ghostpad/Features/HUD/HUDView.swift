@@ -43,11 +43,11 @@ struct KeypadGridView: View {
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size
-            let cell = CGSize(width: (size.width - spacing * CGFloat(layout.columns - 1)) / CGFloat(layout.columns), height: (size.height - spacing * CGFloat(layout.rows - 1)) / CGFloat(layout.rows))
+            let cell = CGSize(width: max((size.width - spacing * CGFloat(layout.columns - 1)) / CGFloat(layout.columns), 1), height: max((size.height - spacing * CGFloat(layout.rows - 1)) / CGFloat(layout.rows), 1))
             let hovered = Set(touches.compactMap { layout.key(at: $0.position)?.id })
             ZStack(alignment: .topLeading) {
                 ForEach(layout.keys) { key in
-                    KeycapView(key: key, state: key.id == pressedKeyID ? .pressed : hovered.contains(key.id) ? .hovered : .idle, fontSize: min(cell.height * 0.4, cell.width * 0.4, 22), cornerRadius: keyCornerRadius)
+                    KeycapView(key: key, state: key.id == pressedKeyID ? .pressed : hovered.contains(key.id) ? .hovered : .idle, fontSize: max(min(cell.height * 0.4, cell.width * 0.4, 22), 1), cornerRadius: keyCornerRadius)
                         .frame(width: span(cell.width, key.columnSpan), height: span(cell.height, key.rowSpan))
                         .offset(x: CGFloat(key.column) * (cell.width + spacing), y: CGFloat(key.row) * (cell.height + spacing))
                 }
